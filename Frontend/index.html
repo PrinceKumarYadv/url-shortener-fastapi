@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Python URL Shortener</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>🔗 URL Shortener</h1>
+
+    <input type="text" id="longUrl" placeholder="Enter long URL">
+    <button onclick="shortenUrl()">Shorten</button>
+
+    <p id="result"></p>
+</div>
+
+<script>
+async function shortenUrl() {
+    const longUrl = document.getElementById("longUrl").value;
+
+    const response = await fetch("http://127.0.0.1:8000/shorten", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ long_url: longUrl })
+    });
+
+    const data = await response.json();
+    document.getElementById("result").innerHTML =
+        `<a href="${data.short_url}" target="_blank">${data.short_url}</a>`;
+}
+</script>
+
+</body>
+</html>
