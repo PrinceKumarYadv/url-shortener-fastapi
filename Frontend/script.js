@@ -24,11 +24,17 @@ async function shortenUrl() {
     const data = await response.json();
 
     result.innerHTML = `
-      result.innerHTML = `
-  ✅ Short URL:<br>
-  <span class="short-link">${data.short_url}</span><br><br>
-  <button onclick="openShortUrl('${data.short_url}')">
-    Open Short URL
-  </button>
-`;
+      ✅ Short URL:<br><br>
+      <span class="short-link">${data.short_url}</span><br><br>
+      <button onclick="openShortUrl('${data.short_url}')">
+        Open Short URL
+      </button>
+    `;
+  } catch (error) {
+    result.innerHTML = "❌ Something went wrong";
+  }
+}
 
+function openShortUrl(url) {
+  window.open(url, "_blank");
+}
