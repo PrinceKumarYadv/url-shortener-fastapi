@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 import random
@@ -9,7 +9,6 @@ from database import save_url, get_url
 
 app = FastAPI(title="Python URL Shortener")
 
-# CORS (Frontend connect ke liye)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -22,12 +21,11 @@ def generate_code(length: int = 6):
     return "".join(random.choices(string.ascii_letters + string.digits, k=length))
 
 @app.post("/shorten", response_model=URLResponse)
-def shorten_url(data: URLRequest):
+def shorten_url(data: URLRequest, request: Request):
     code = generate_code()
     save_url(code, data.long_url)
-    return {
-        "short_url": f"http://127.0.0.1:8000/{code}"
-    }
+    base_url = str(request.base_url).rstrip("/")
+    return {"short_url": f"{base_url}/{code}"}
 
 @app.get("/{code}")
 def redirect_url(code: str):
